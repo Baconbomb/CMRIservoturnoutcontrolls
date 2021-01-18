@@ -1,17 +1,4 @@
-/**
- * An example of C/MRI inputs and outputs
- * ======================================
- * Sets up pins 2-5 as an outputs with LEDs, and pins 6-9 as inputs with pullups.
- * 
- * 1: Set up a JMRI connection, see hello_world, steps 1-4
- * 2: Open Tools > Tables > Lights and click 'Add'
- * 3: Add a new light at hardware address 1, then click 'Create'.
- * 4: Repeat for hardware address 2, 3, 4 and close the window. Ignore the save message.
- * 5: Click on 'Sensors' and set up new sensors for hardware address 1, 2, 3 and 4.
- * 6: You'll notice the TX and RX LEDs burst into life. This is JMRI polling the state of our sensors.
- * 7: Ground pin 6, you'll see sensor #1 go Active, while the rest are Inactive.
- * 8: Switch to Lights and play around with the State buttons. Congratulations!
- * 
+/*
  * Debugging:
  * Open the CMRI > CMRI Monitor window to check what is getting sent and received.
  * With 'Show raw data' turned on the output looks like:
@@ -41,8 +28,8 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(); //setup the board addre
 // Setup serial communication
 Auto485 bus(DE_PIN); // Arduino pin 2 -> MAX485 DE and RE pins
 
-//Define CMRI connection 24 inputs and 48 outputs
-CMRI cmri0(0, 24, 48, bus); // first SMINI with address 0. SMINI = 24 inputs, 48 outputs
+//Define CMRI connection splitting servos to own instance
+CMRI cmri0(0, 24, 48, bus); // first SMINI with address 0 for servos
 CMRI cmri1(1); //Second SMINI with adress 1. SMINI = 24 inputs, 48 outputs
 
 //table to hold servodata
@@ -53,12 +40,10 @@ int Close[numServos]; //Create a table to hold the close value for each servo
 void setup() {
   Serial.begin(19200); // make sure this matches your speed set in JMRI
   bus.begin(19200);
-
-
   
   // set up pins for input och output 2-5 outpu, 6-9 input
-  for (int i=2; i<=5; i++) { pinMode(i, OUTPUT); }
-  for (int i=6; i<=9; i++) { pinMode(i, INPUT); digitalWrite(i, HIGH); }
+  for (int i=2; i<=5; i++) { pinMode(i, OUTPUT); } //pins 2-5 output
+  for (int i=6; i<=9; i++) { pinMode(i, INPUT); digitalWrite(i, HIGH); } //pins 6-9 input
 
 
   //Initialise PCA9685 board

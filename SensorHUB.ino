@@ -55,7 +55,9 @@ void setup() {
   Close[0] = 1700;
   
 }
+
 char c;
+
 void loop() {
   // 1: build up a packet
   while (Serial.available() > 0)
@@ -77,6 +79,7 @@ void loop() {
     }
   }
   
+
   //Outputs
   //comment out or delete lines not required to speed up
   // 2: update outputs

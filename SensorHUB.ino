@@ -20,7 +20,7 @@
 #include <Auto485.h>
 
 #define DE_PIN 2
-#define numServos 1 //The number of servos connected
+#define numServos 8 //The number of servos connected
 
 // Define the PCA9685 board addresses
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(); //setup the board address - defaults to 0x40 if not specified
@@ -41,9 +41,9 @@ void setup() {
   Serial.begin(19200); // make sure this matches your speed set in JMRI
   bus.begin(19200);
   
-  // set up pins for input och output 2-5 outpu, 6-9 input
-  for (int i=2; i<=5; i++) { pinMode(i, OUTPUT); } //pins 2-5 output
-  for (int i=6; i<=9; i++) { pinMode(i, INPUT); digitalWrite(i, HIGH); } //pins 6-9 input
+  // set up pins for input och output 
+  for (int i=3; i<=25; i++) { pinMode(i, OUTPUT); } 
+  for (int i=26; i<=53; i++) { pinMode(i, INPUT); digitalWrite(i, HIGH); } 
 
 
   //Initialise PCA9685 board
@@ -51,8 +51,8 @@ void setup() {
   pwm.setPWMFreq(50);
 
   //Servo connection 0 - point motor. duplicate for more servors and change number if not throwing. range 1000-2000
-  Throw[0] = 1300;
-  Close[0] = 1700;
+  Throw[numServos] = 1250, 1250, 1250, 1250, 1250, 1250, 1250, 1250;
+  Close[numServos] = 1700, 1700, 1700, 1700, 1700, 1700, 1700, 1700;
   
 }
 
@@ -82,17 +82,27 @@ void loop() {
 
   //Outputs
   //comment out or delete lines not required to speed up
+  //outputs pins 3-25
   // 2: update outputs
-  digitalWrite(2, cmri1.get_bit(0));
-  digitalWrite(3, cmri1.get_bit(1));
+  digitalWrite(3, cmri1.get_bit(0));
+  digitalWrite(4, cmri1.get_bit(1));
   //digitalWrite(4, cmri1.get_bit(2));
   //digitalWrite(5, cmri1.get_bit(3));
 
   //Inputs
   //comment out or delete lines not required to speed up
+  //for sensors and buttons pins 26-53
   // 3: update inputs (invert digitalRead due to the pullups)
-  cmri1.set_bit(0, !digitalRead(6));
-  //cmri1.set_bit(1, !digitalRead(7));
-  //cmri1.set_bit(2, !digitalRead(8));
-  //cmri1.set_bit(3, !digitalRead(9));
+  //Buttons for switching
+  cmri1.set_bit(0, !digitalRead(26));
+  cmri1.set_bit(1, !digitalRead(27));
+  cmri1.set_bit(2, !digitalRead(28));
+  cmri1.set_bit(3, !digitalRead(29));
+  cmri1.set_bit(4, !digitalRead(30));
+  cmri1.set_bit(5, !digitalRead(31));
+  cmri1.set_bit(6, !digitalRead(32));
+  cmri1.set_bit(7, !digitalRead(33));
+  //Sensors
+  //cmri1.set_bit(8, !digitalRead(34));
+
 }
